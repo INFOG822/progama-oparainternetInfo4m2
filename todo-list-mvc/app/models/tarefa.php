@@ -1,44 +1,66 @@
 <?php
-require_once __DIR__ . '/../models/tarefa.php';
-class TarefaController {
-    private $tarefaModel; 
+require_once __DIR__ . '/../config/database.php';
+
+class Tarefa{
+    private $conn; 
 
     public function __construct(){
-        $this->tarefaModel = new Tarefa(); 
+        $db = new Database();
+        $this->conn = $db->conectar(); 
     }
 
-    public function index(){
-        $tarefas = $this->tarefaModel->listar(); 
-        include __DIR__ . '/../views/listar.php'; 
-    }
+    ## Listar 
 
-    public function criar(){
-        if(isset($_POST['descricao']) && !empty(trim($_POST['descricao']))){
-            $this->tarefaModel->criar($_POST['descricao']); 
+    public function listarAtivas(){
+        $tarefas = [];
+        $sql = "SELECT * FROM tarefas ORDER BY data_criacao DESC"; 
+        $resultado = $this->conn->query($sql); 
+
+        if($resultado->num_rows >0){
+            while($row = $resultado->fetch_assoc()){
+                $tarefas[] = $row; 
+            }
         }
-        header("Location: index.php"); 
+
+        return $tarefas;
     }
 
-    public function excluir(){
-        if(isset($_GET['delete'])){
-            $this->tarefaModel->excluir($_GET['delete']); 
-        }
-        header("Location: index.php"); 
+    public function listar() {
+    return []; 
     }
 
-    public function editar() {
-        if (isset($_GET['id'])) {
-            $tarefa = $this->tarefaModel->buscarPorId($_GET['id']);
-            include __DIR__ . '/../views/editar.php';
-        }
+    ## Criar 
+
+    public function criar($descricao){
+        $descricao = $this->conn->real_escape_string($descricao); 
+        $sql = "INSERT INTO tarefas (descricao) VALUES ('$descricao')"; 
+        return $this->conn->query($sql); 
     }
 
-    public function atualizar() {
-        if (isset($_POST['id']) && isset($_POST['descricao'])) {
-            $this->tarefaModel->criar($_POST['descricao']);
-        }
-        header("Location: index.php");
+    ## Exlcuir 
+
+    public function excluir($id){
+        $id = intval($id);
+        $sql = "DELETE FROM tarefas WHERE id = $id"; 
+        return $this->conn->query($sql); 
     }
+
+    ## Editar
+    public function editar($id, $descricao){
+        $id = intval($id);
+        $descricao = $this->conn->real_escape_string($descricao);
+        $sql = "UPDATE tarefas SET descricao = '$descricao' WHERE id = $id";
+        return $this->conn->query($sql);
+    }
+
+    ## Buscar por ID (para preencher o formulário de edição)
+    public function buscarPorId($id){
+        $id = intval($id);
+        $sql = "SELECT * FROM tarefas WHERE id = $id";
+        $resultado = $this->conn->query($sql);
+        return $resultado->fetch_assoc();
+    }
+
 }
 
 ?>
