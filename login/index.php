@@ -1,10 +1,43 @@
 <?php 
-include ('conexao.php')
+
+include ('conexao.php');
+if (isset($_POST['email']) || isset ($_POST['senha'])){
+
+
+if (Strlen(   $_POST['email']) ==0){
+    echo"preencha seu email";
+}
+    else if (Strlen (  $POST['senha']) == 0 ){
+        echo "peencha sua senha ";
+    }
+    else{
+        $email = $mysql->real_escape_string($_POST['email']);
+        $senha = $mysql->real_escape_string($_POST['senha']);
+
+        $sql = "SELECT * FROM usuarios WHERE email = '$email' AND senha = '$senha'" ;
+
+        $lista_usuasrios = $mysqli->query($sql);
+        $quantidade = $lista_usuarios->num_rows;
+
+        if($quantidade == 1){
+            $usuario = $lista_usuarios-> fetch_assoc();
+            if(!isset($_SESSION)){
+                session_start();
+
+            }
+            $_SESSION['id'] = $usuario ['id'];
+            $_SESSION['nome'] = $usuario ['nome'];
+            header ( "Location: painel.php" );
+
+        }
+        else{
+            echo "falha ao login";
+        }
+
+    }
+}
+
 ?>
-
-
-
-
 
 
 <!DOCTYPE html>
