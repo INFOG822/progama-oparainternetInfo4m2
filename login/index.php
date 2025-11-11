@@ -1,44 +1,43 @@
-<?php 
+<?php
 
-include ('conexao.php');
-if (isset($_POST['email']) || isset ($_POST['senha'])){
+include('conexao.php');
 
-
-if (Strlen(   $_POST['email']) ==0){
-    echo"preencha seu email";
-}
-    else if (Strlen (  $POST['senha']) == 0 ){
-        echo "peencha sua senha ";
+if(isset($_POST['email']) || isset($_POST['senha'])){
+    if(strlen($_POST['email']) == 0){
+        echo "Preencha seu email" ;
     }
+    else if(strlen($_POST['senha']) == 0){
+        echo "Preencha sua senha"; 
+    }
+       
     else{
-        $email = $mysql->real_escape_string($_POST['email']);
-        $senha = $mysql->real_escape_string($_POST['senha']);
+        $email = $mysqli->real_escape_string($_POST['email']);
+        $senha = $mysqli->real_escape_string($_POST['senha']); 
 
-        $sql = "SELECT * FROM usuarios WHERE email = '$email' AND senha = '$senha'" ;
+        $sql = "SELECT * FROM usuarios WHERE email = '$email' AND senha = '$senha'";
 
-        $lista_usuasrios = $mysqli->query($sql);
-        $quantidade = $lista_usuarios->num_rows;
+        $lista_usuarios = $mysqli->query($sql); 
+        $quantidade  = $lista_usuarios->num_rows; 
 
         if($quantidade == 1){
-            $usuario = $lista_usuarios-> fetch_assoc();
+            $usuario = $lista_usuarios->fetch_assoc(); 
+
             if(!isset($_SESSION)){
-                session_start();
-
+                session_start(); 
             }
-            $_SESSION['id'] = $usuario ['id'];
-            $_SESSION['nome'] = $usuario ['nome'];
-            header ( "Location: painel.php" );
 
+            $_SESSION['id'] = $usuario['id']; 
+            $_SESSION['nome'] = $usuario['nome'];
+
+            header("Location: painel.php"); 
         }
         else{
-            echo "falha ao login";
+            echo "Falha ao logar" ; 
         }
-
     }
 }
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
