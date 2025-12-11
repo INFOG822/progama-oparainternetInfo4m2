@@ -1,24 +1,25 @@
 <?php
-require_once __DIR__ . '/controllers/tarefacontrollers.php';
+require_once __DIR__ . '/app/controllers/usuarioController.php';
 
-if (!isset($_SESSION)) {
-    session_start();
-}
-
-$controller = new tarefacontrollers();
+$controller = new UsuarioController();
 
 $action = $_GET['action'] ?? 'index';
 
 switch ($action) {
-    case 'logar':
-        $controller->logar();
+    case 'login':
+        $controller->login();
         break;
 
     case 'painel':
         $controller->painel();
         break;
 
+    case 'logout':
+        $controller->logout();
+        break;
+
     default:
         $controller->index();
         break;
 }
+?>
