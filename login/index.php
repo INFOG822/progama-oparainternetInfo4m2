@@ -1,25 +1,39 @@
 <?php
-require_once __DIR__ . '/app/controllers/usuarioController.php';
+session_start();
 
-$controller = new UsuarioController();
+$controller = $_GET['controller'] ?? 'usuario';
+$action     = $_GET['action'] ?? 'index';
 
-$action = $_GET['action'] ?? 'index';
+if ($controller == 'usuario') {
 
-switch ($action) {
-    case 'login':
-        $controller->login();
-        break;
+    require_once 'app/controllers/UsuarioController.php';
+    $ctrl = new UsuarioController();
 
-    case 'painel':
-        $controller->painel();
-        break;
+    if ($action == 'login') {
+        $ctrl->login();
+    } elseif ($action == 'painel') {
+        $ctrl->painel();
+    } elseif ($action == 'logout') {
+        $ctrl->logout();
+    } else {
+        $ctrl->index();
+    }
 
-    case 'logout':
-        $controller->logout();
-        break;
+} elseif ($controller == 'tarefa') {
 
-    default:
-        $controller->index();
-        break;
+    require_once 'protect.php';
+    require_once 'app/controllers/TarefaController.php';
+    $ctrl = new TarefaController();
+
+    if ($action == 'criar') {
+        $ctrl->criar();
+    } elseif ($action == 'editar') {
+        $ctrl->editar();
+    } elseif ($action == 'atualizar') {
+        $ctrl->atualizar();
+    } elseif ($action == 'excluir') {
+        $ctrl->excluir();
+    } else {
+        $ctrl->index();
+    }
 }
-?>

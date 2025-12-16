@@ -1,6 +1,6 @@
 <?php 
 if(isset($_SESSION['erro'])){
-echo"<script>alert('".$_SESSION['erro']."');</script>";
+echo"<script>alert('".$_SESSION['erro']. "');</script>";
 $_SESSION['erro'] = null;
 }
 ?>

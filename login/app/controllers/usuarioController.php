@@ -32,12 +32,10 @@ class UsuarioController {
         $usuario = $this->usuarioModel->autenticar($_POST['email'], $_POST['senha']);
 
         if ($usuario !== null) {
-
-            $_SESSION['id'] = $usuario['id'];
+            $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['nome'] = $usuario['nome'];
 
-            header("Location: index.php?action=painel");
-
+            header("Location: index.php?controller=usuario&action=painel");
         } else {
             $_SESSION['erro'] = 'Usuário ou senha inválidos.';
             header('Location: index.php');
